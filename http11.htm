@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<head>
+    <script src="PGWeb3D.min.js"></script>
+</head>
+<body>
+    <div id="terrainView" style="width:100%;height:100%;position:absolute;top:0;left:0;"></div>
+    <script>
+        var oview = new ov.TerrainView('terrainView', { outputSelectMap: false, outputDepthMap: false });
+        CTerrainEngine.WithoutBreak = true;
+        var setting = {};
+		
+		setting.urlTemplate = "http://mapserver.pilotgaea.com.tw/Oview.aspx?{URL}";
+
+        function onTerrainOK() {
+            oview.setBaseLayer("GOOGLE_MAP", "IMAGE", false, "{URL}");
+            setInterval(function () {
+                oview.clearPromptText();
+                oview.addPromptText({ text: "FPS:" + oview.getFPS().toFixed(2), font: "Times New Roman", size: 18, color: "#00FF00", align: ov.TEXT_ALIGN.HORZ_LEFT | ov.TEXT_ALIGN.VERT_TOP });
+            }, 100);
+
+			oview.addAcute3DLayer("127.0.0.1", 8080, "TaichungLOD", null, setting);
+			oview.gotoCamera(new ov.Camera(new Geo3DPoint(120.639566, 24.151707, 2000),
+				new Geo3DPoint(0, 0, -1),
+				new Geo3DPoint(0, 1, 0)), true);
+
+            
+        }
+
+        oview.openTerrain("127.0.0.1", 8080, "terrain", onTerrainOK, null, setting);
+    </script>
+</body>
